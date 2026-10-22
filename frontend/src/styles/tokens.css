@@ -1,0 +1,40 @@
+:root {
+  --navy: #101c35;
+  --navy-2: #17264a;
+  --navy-3: #22355f;
+  --accent: #2563eb;
+  --accent-soft: #e8efff;
+  --teal: #0d9488;
+  --teal-soft: #e6f6f4;
+  --bg: #f7f9fc;
+  --surface: #ffffff;
+  --surface-2: #f2f5fa;
+  --border: #e3e8f0;
+  --border-strong: #cfd7e4;
+  --text: #172033;
+  --text-2: #3d4a63;
+  --muted: #64748b;
+  --success: #15803d;
+  --success-soft: #e8f6ee;
+  --warning: #b45309;
+  --warning-ink: #d97706;
+  --warning-soft: #fdf3e2;
+  --error: #dc2626;
+  --error-soft: #fdecec;
+  --info: #2563eb;
+  --info-soft: #e8efff;
+  /* Chart roles — validated categorical order (blue, orange, aqua, yellow, magenta). */
+  --series-1: #2a78d6;
+  --series-2: #eb6834;
+  --series-3: #1baf7a;
+  --series-4: #eda100;
+  --series-5: #e87ba4;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow-1: 0 1px 2px rgba(16, 28, 53, .06), 0 1px 1px rgba(16, 28, 53, .04);
+  --shadow-2: 0 8px 24px rgba(16, 28, 53, .12);
+  --sidebar-w: 248px;
+  --sidebar-w-collapsed: 68px;
+  --topbar-h: 60px;
+  --font: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+}

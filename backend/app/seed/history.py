@@ -12,6 +12,7 @@ from ..config import get_settings
 from ..models import ApprovalTask, MdmRequest, RequestAttachment, User
 from ..services import notifications, sap_service, settings_service, workflow
 from ..services.clock import add_working_days, utcnow
+from ..services.errors import ValidationFailed
 
 PDF_BYTES = (b"%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj 2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj "
              b"3 0 obj<</Type/Page/Parent 2 0 R/MediaBox[0 0 300 144]/Contents 4 0 R/Resources<</Font<</F1 5 0 R>>>>>>endobj "
@@ -116,10 +117,19 @@ class History:
         sap_service.sync(self.db, self.u["priya"], req, at=s)
         return s
 
-    def complete(self, user, domain, data, country, entity, start, dept=""):
-        req = self.draft(user, domain, data, country, entity, start, dept=dept)
+    def complete(self, user, domain, data, country, entity, start, dept="", blocked_first=False):
+        req = self.draft(user, domain, data, country, entity, start, dept=dept, docs=not blocked_first)
         sub = start + timedelta(hours=float(self.rng.uniform(0.5, 6)))
-        self.check_and_submit(req, sub)
+        if blocked_first and DOCS[domain]:
+            # Requestor tries to submit without the mandatory document: blocked before any approver sees it.
+            try:
+                workflow.submit(self.db, req.requester, req, at=start + timedelta(minutes=20))
+            except ValidationFailed:
+                pass
+            for cat in DOCS[domain]:
+                attach(self.db, req, req.requester, cat, sub - timedelta(minutes=10))
+        if req.status == "DRAFT":
+            self.check_and_submit(req, sub)
         last = self.approve(req, sub)
         if req.status == "MDM_VERIFICATION":
             self.finish(req, last)
@@ -155,7 +165,7 @@ def seed_history(db: Session, users: dict[str, User], rng) -> dict:
     for i, (user, domain, data, country, entity) in enumerate(plan):
         start = now - timedelta(days=int(10 + (i * 83 / len(plan))), hours=int(rng.integers(0, 8)))
         start = start.replace(hour=int(rng.integers(1, 9)))  # 09:00–17:00 SGT ≈ 01:00–09:00 UTC
-        created.append(h.complete(user, domain, data, country, entity, start))
+        created.append(h.complete(user, domain, data, country, entity, start, blocked_first=i % 5 == 1))
 
     # Rejected vendor (Finance found a mismatch).
     r = h.draft("ben", "VENDOR", vendor_data("Eastgate Medical Trading", "SG2020771122B"), "SG", "QTS", now - timedelta(days=24))

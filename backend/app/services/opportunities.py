@@ -76,7 +76,7 @@ def cross_sell_candidates(db: Session, use_mappings: bool = True) -> tuple[list[
                 "insight": f"{c['name']} buys {have} but not Product {fam}.",
                 "explanation": f"{adopters} of {len(peers)} comparable {c['segment'].lower()} customers that buy {have} also buy Product {fam} "
                                f"({rate:.0%}). " + (f"The customer enquired about Product {fam} {n_enq} time(s) in the last 6 months. " if n_enq else "")
-                               + f"It is in the top {100 - round(100 * float(seg_rank[key])):.0f}% of {c['segment'].lower()} customers by order lines.",
+                               + f"By order lines it ranks at the {round(100 * float(seg_rank[key]))}th percentile of {c['segment'].lower()} customers.",
             })
     return out, suppressed
 

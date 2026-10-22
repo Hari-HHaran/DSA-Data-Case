@@ -20,14 +20,16 @@ def reset_schema():
     from alembic.config import Config
     from pathlib import Path
     url = get_settings().database_url
-    engine.dispose()
-    if url.startswith("sqlite:///"):
-        db_path = Path(url.replace("sqlite:///", ""))
-        for suffix in ("", "-wal", "-shm"):
-            Path(str(db_path) + suffix).unlink(missing_ok=True)
-    else:
-        Base.metadata.drop_all(engine)
-        with engine.begin() as conn:
+    with engine.begin() as conn:
+        if url.startswith("sqlite"):
+            # Drop in place (FKs off) so a running API server keeps valid connections.
+            conn.exec_driver_sql("PRAGMA foreign_keys=OFF")
+            names = [r[0] for r in conn.exec_driver_sql("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'")]
+            for name in names:
+                conn.exec_driver_sql(f'DROP TABLE IF EXISTS "{name}"')
+            conn.exec_driver_sql("PRAGMA foreign_keys=ON")
+        else:
+            Base.metadata.drop_all(conn)
             conn.exec_driver_sql("DROP TABLE IF EXISTS alembic_version")
     cfg = Config(str(Path(__file__).resolve().parents[2] / "alembic.ini"))
     cfg.set_main_option("sqlalchemy.url", get_settings().database_url)

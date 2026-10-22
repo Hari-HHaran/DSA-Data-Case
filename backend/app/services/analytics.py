@@ -325,9 +325,14 @@ def data_quality(db: Session) -> dict:
             "customers_with_mapping": int(inc["canonical_key"].nunique()),
             "raw_name_variants": int(naive_po["raw_customer_name"].nunique()),
         },
-        "inclusion_policy": __doc__.split("INCLUSION POLICY — ")[1].strip(),
+        "inclusion_policy": _policy_text(),
         "synthetic": True,
     }
+
+
+def _policy_text() -> str:
+    text = " ".join(__doc__.split("INCLUSION POLICY — ")[1].split())
+    return text[0].upper() + text[1:]
 
 
 def customer_consolidation(db: Session, limit: int = 12) -> list[dict]:
