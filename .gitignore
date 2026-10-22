@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+.venv/
+node_modules/
+dist/
+*.db
+*.db-journal
+backend/storage/uploads/*
+!backend/storage/uploads/.gitkeep
+.env
+.env.local
+frontend/.env
+backend/.env
+.pytest_cache/
+test-results/
+playwright-report/
