@@ -91,12 +91,12 @@ const nav = computed(() => {
       has('SALES', 'EXECUTIVE', 'ADMIN', 'MDM_ANALYST') && { to: '/growth/opportunities', label: 'Growth Opportunities', icon: Lightbulb },
     ].filter(Boolean) : [] },
     { label: 'Impact', items: [{ to: '/impact', label: 'Business Impact', icon: Gauge }] },
-    { label: 'Administration', items: [
-      { to: '/admin/forms', label: 'Form Configuration', icon: SlidersHorizontal },
-      { to: '/admin/approval-rules', label: 'Approval Rules', icon: ShieldCheck },
-      has('ADMIN', 'MDM_ANALYST', 'EXECUTIVE') && { to: '/admin/integrations', label: 'SAP & Notifications', icon: Plug },
-      { to: '/settings', label: 'Settings', icon: Settings },
+        { label: 'Administration', items: [
+      has('ADMIN') && { to: '/admin/forms', label: 'Form Configuration', icon: SlidersHorizontal },
+      has('ADMIN') && { to: '/admin/approval-rules', label: 'Approval Rules', icon: ShieldCheck },
+      has('ADMIN', 'MDM_ANALYST') && { to: '/admin/integrations', label: 'SAP & Notifications', icon: Plug },
     ].filter(Boolean) },
+    { label: 'Account', items: [{ to: '/settings', label: 'Settings', icon: Settings }] },
   ]
 })
 function isActive(item) {

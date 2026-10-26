@@ -6,6 +6,8 @@
     </PageHeader>
     <div v-if="$route.query.denied" class="callout warn mb-3"><Lock :size="16" /><div>Your role does not have access to <strong>{{ $route.query.denied }}</strong>. Access is enforced by the server, not just hidden in the menu.</div></div>
     <ErrorState v-if="error" :error="error" :retry="load" class="mb-3" />
+    <!-- CHANGED: tell the requestor what needs them, instead of making them scan the list -->
+    <div v-if="needsAction.length" class="callout warn mb-3"><AlertTriangle :size="16" /><div><strong>{{ needsAction.length === 1 ? '1 request needs' : `${needsAction.length} requests need` }} your attention:</strong> <RouterLink :to="rowTo(needsAction[0])">{{ needsAction[0].title }}</RouterLink></div></div>
 
     <div class="pillars mb-3">
       <RouterLink to="/mdm/requests" class="pillar"><ShieldCheck :size="18" /><div><strong>Smart MDM</strong><small>{{ op?.submissions_blocked_by_validation ?? '…' }} bad submissions stopped at intake · {{ op?.duplicates_prevented ?? '…' }} duplicates prevented</small></div></RouterLink>
@@ -14,21 +16,27 @@
         <small v-if="d?.regional">{{ fmtNumber(d.regional.kpis.confirmed_pos.value) }} confirmed POs · {{ d.opportunities.open }} open opportunities</small><small v-else>Regional insight for sales & leadership</small></div></RouterLink>
     </div>
 
-    <h2 class="sec-title">Operations</h2>
-    <div class="grid grid-kpi mb-3">
-      <KpiTile label="Open MDM requests" :value="op?.open_requests" :icon="FileStack" to="/flow/tracker" :loading="!op" />
-      <KpiTile label="Awaiting approval" :value="op?.awaiting_approval" :icon="Hourglass" tone="warning" to="/flow/tracker" :loading="!op" />
-      <KpiTile label="Overdue approval tasks" :value="op?.overdue_approvals" :icon="AlarmClock" tone="error" hint="Auto-reminded & escalated" :loading="!op" />
-      <KpiTile label="Median turnaround" :value="op?.median_turnaround_days" unit="working days" :hint="`p90 ${op?.p90_turnaround_days ?? '—'} · simulated history`" :icon="Timer" tone="teal" :loading="!op" />
-      <KpiTile label="Successful SAP hand-offs" :value="op?.sap_success" :icon="Database" tone="success" :hint="op?.sap_failed_open ? `${op.sap_failed_open} failed, awaiting retry` : 'Mock adapter'" to="/admin/integrations" :loading="!op" />
-    </div>
-    <h2 class="sec-title">Data quality</h2>
-    <div class="grid grid-kpi mb-3">
-      <KpiTile label="First-pass validation" :value="fmtPct(op?.first_pass_validation_rate)" hint="Submissions accepted on first attempt; the rest were blocked before reaching an approver" :icon="CheckCircle2" tone="success" :loading="!op" />
-      <KpiTile label="Potential duplicate rate" :value="fmtPct(op?.potential_duplicate_rate)" hint="Checked requests with ≥1 similar record" :icon="Copy" tone="warning" :loading="!op" />
-      <KpiTile label="Duplicates prevented" :value="op?.duplicates_prevented" hint="Requestor reused the existing record" :icon="Recycle" tone="teal" :loading="!op" />
-      <KpiTile label="Open requests flagged for review" :value="op?.flagged_for_review" hint="Continued with documented justification" :icon="Flag" :loading="!op" />
-    </div>
+    <!-- CHANGED: process-wide numbers only for ops roles and approvers -->
+    <template v-if="showOps">
+      <h2 class="sec-title">Operations</h2>
+      <div class="grid grid-kpi mb-3">
+        <KpiTile label="Open MDM requests" :value="op?.open_requests" :icon="FileStack" to="/flow/tracker" :loading="!op" />
+        <KpiTile label="Awaiting approval" :value="op?.awaiting_approval" :icon="Hourglass" tone="warning" to="/flow/tracker" :loading="!op" />
+        <KpiTile label="Overdue approval tasks" :value="op?.overdue_approvals" :icon="AlarmClock" tone="error" hint="Auto-reminded & escalated" :loading="!op" />
+        <KpiTile label="Median turnaround" :value="op?.median_turnaround_days" unit="working days" :hint="`p90 ${op?.p90_turnaround_days ?? '—'} · simulated history`" :icon="Timer" tone="teal" :loading="!op" />
+        <KpiTile label="Successful SAP hand-offs" :value="op?.sap_success" :icon="Database" tone="success" :hint="op?.sap_failed_open ? `${op.sap_failed_open} failed, awaiting retry` : 'Mock adapter'" to="/admin/integrations" :loading="!op" />
+      </div>
+    </template>
+    <!-- CHANGED: data-quality metrics only for ops roles -->
+    <template v-if="isOps">
+      <h2 class="sec-title">Data quality</h2>
+      <div class="grid grid-kpi mb-3">
+        <KpiTile label="First-pass validation" :value="fmtPct(op?.first_pass_validation_rate)" hint="Submissions accepted on first attempt; the rest were blocked before reaching an approver" :icon="CheckCircle2" tone="success" :loading="!op" />
+        <KpiTile label="Potential duplicate rate" :value="fmtPct(op?.potential_duplicate_rate)" hint="Checked requests with ≥1 similar record" :icon="Copy" tone="warning" :loading="!op" />
+        <KpiTile label="Duplicates prevented" :value="op?.duplicates_prevented" hint="Requestor reused the existing record" :icon="Recycle" tone="teal" :loading="!op" />
+        <KpiTile label="Open requests flagged for review" :value="op?.flagged_for_review" hint="Continued with documented justification" :icon="Flag" :loading="!op" />
+      </div>
+    </template>
 
     <template v-if="d?.regional">
       <h2 class="sec-title">Regional business <span class="pill tag-synthetic ms-1">Synthetic</span></h2>
@@ -41,7 +49,8 @@
       </div>
     </template>
 
-    <div class="grid grid-main-side">
+    <!-- CHANGED: two-column layout only when the activity column is shown -->
+    <div class="grid" :class="{ 'grid-main-side': isOps }">
       <div class="d-flex flex-column gap-3 min-w-0">
         <ChartCard v-if="d?.regional" title="Confirmed purchase orders by country" subtitle="Per month, each PO counted once">
           <EChart :option="trendOpt" height="260px" aria-label="Monthly confirmed purchase orders by country" />
@@ -61,7 +70,8 @@
         <section v-if="d?.my_requests?.length || auth.has('REQUESTOR')" class="card-x">
           <div class="card-x-head"><h2>My recent requests</h2><RouterLink to="/mdm/requests" class="small">All</RouterLink></div>
           <EmptyState v-if="!d?.my_requests?.length" title="No requests yet" />
-          <RouterLink v-for="r in d?.my_requests || []" :key="r.id" :to="r.status === 'DRAFT' ? `/mdm/new?edit=${r.id}` : `/mdm/requests/${r.id}`" class="row-link">
+          <!-- CHANGED: requests that need the requestor come first -->
+          <RouterLink v-for="r in myRequestsSorted" :key="r.id" :to="rowTo(r)" class="row-link">
             <div class="flex-grow-1"><strong>{{ r.title }}</strong><small>{{ r.request_number }} · {{ r.domain_label }} · updated {{ relTime(r.updated_at) }}</small></div><StatusBadge :status="r.status" /></RouterLink>
         </section>
         <section v-if="d?.opportunities?.top?.length" class="card-x">
@@ -70,8 +80,9 @@
             <div class="flex-grow-1"><strong>{{ o.title }}</strong><small>{{ o.insight }}</small></div><span class="pill" :class="o.priority === 'HIGH' ? 'tone-error' : 'tone-warning'">{{ o.priority.toLowerCase() }}</span></RouterLink>
         </section>
       </div>
-      <section class="card-x">
-        <div class="card-x-head"><h2>Recent activity</h2><RouterLink v-if="auth.has('ADMIN', 'MDM_ANALYST', 'EXECUTIVE')" to="/flow/audit" class="small">Audit log</RouterLink></div>
+      <!-- CHANGED: whole-system activity feed only for the roles that already get the Audit log link -->
+      <section v-if="isOps" class="card-x">
+        <div class="card-x-head"><h2>Recent activity</h2><RouterLink to="/flow/audit" class="small">Audit log</RouterLink></div>
         <div class="card-x-body"><LoadingBlock v-if="!d" :rows="6" /><AuditList v-else :events="d.activity" show-ref /></div>
       </section>
     </div>
@@ -80,7 +91,7 @@
 <script setup>
 import { computed, onMounted, ref } from 'vue'
 import {
-  AlarmClock, CheckCircle2, Copy, Database, FileStack, Flag, Hourglass, Inbox, Lightbulb, LineChart, Lock, Plus, Recycle, Rocket, ShieldCheck, ShoppingCart,
+  AlarmClock, AlertTriangle, CheckCircle2, Copy, Database, FileStack, Flag, Hourglass, Inbox, Lightbulb, LineChart, Lock, Plus, Recycle, Rocket, ShieldCheck, ShoppingCart,
   Target, Timer, TrendingUp, Workflow,
 } from 'lucide-vue-next'
 import PageHeader from '@/components/PageHeader.vue'
@@ -108,6 +119,17 @@ const roleLine = computed(() => {
   const roles = auth.roles.map((r) => ROLE_LABELS[r]).filter((r) => r !== auth.user?.title)
   return `${auth.user?.title}${roles.length ? ' · ' + roles.join(', ') : ''}. One view across master data, approvals and regional growth.`
 })
+// CHANGED (script): same role check the template already used for the Audit log link
+const isOps = computed(() => auth.has('ADMIN', 'MDM_ANALYST', 'EXECUTIVE'))
+// Approvers are recognised the same way the template does: the API only sends them my_tasks
+const showOps = computed(() => isOps.value || d.value?.my_tasks != null)
+// ASSUMPTION: matches status keys containing CHANGE / RETURN / DRAFT; adjust to your real keys
+const needsAction = computed(() => (d.value?.my_requests || []).filter((r) => /change|return|draft/i.test(r.status)))
+const myRequestsSorted = computed(() => {
+  const mine = d.value?.my_requests || []
+  return [...needsAction.value, ...mine.filter((r) => !needsAction.value.includes(r))]
+})
+const rowTo = (r) => (r.status === 'DRAFT' ? `/mdm/new?edit=${r.id}` : `/mdm/requests/${r.id}`)
 const strongest = computed(() => [...(d.value?.regional?.matrix || [])].filter((m) => m.growth != null).sort((a, b) => b.growth - a.growth)[0])
 const trendOpt = computed(() => {
   const r = d.value?.regional

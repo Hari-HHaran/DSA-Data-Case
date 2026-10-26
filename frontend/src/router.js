@@ -16,9 +16,9 @@ const routes = [
   { path: '/growth/forecasting', name: 'growth-forecast', component: () => import('@/views/growth/DemandForecasting.vue'), meta: { title: 'Demand Forecasting', section: 'Growth Intelligence', roles: ['SALES', 'EXECUTIVE', 'ADMIN', 'MDM_ANALYST', 'BU_HEAD', 'FINANCE'] } },
   { path: '/growth/opportunities', name: 'growth-opps', component: () => import('@/views/growth/GrowthOpportunities.vue'), meta: { title: 'Growth Opportunities', section: 'Growth Intelligence', roles: ['SALES', 'EXECUTIVE', 'ADMIN', 'MDM_ANALYST'] } },
   { path: '/impact', name: 'impact', component: () => import('@/views/BusinessImpact.vue'), meta: { title: 'Business Impact' } },
-  { path: '/admin/forms', name: 'admin-forms', component: () => import('@/views/admin/FormConfiguration.vue'), meta: { title: 'Form Configuration', section: 'Administration' } },
-  { path: '/admin/approval-rules', name: 'admin-rules', component: () => import('@/views/admin/ApprovalRules.vue'), meta: { title: 'Approval Rules', section: 'Administration' } },
-  { path: '/admin/integrations', name: 'admin-integrations', component: () => import('@/views/admin/Integrations.vue'), meta: { title: 'SAP & Notifications', section: 'Administration', roles: ['ADMIN', 'MDM_ANALYST', 'EXECUTIVE'] } },
+  { path: '/admin/forms', name: 'admin-forms', component: () => import('@/views/admin/FormConfiguration.vue'), meta: { title: 'Form Configuration', section: 'Administration', roles: ['ADMIN'] } },
+  { path: '/admin/approval-rules', name: 'admin-rules', component: () => import('@/views/admin/ApprovalRules.vue'), meta: { title: 'Approval Rules', section: 'Administration', roles: ['ADMIN'] } },
+  { path: '/admin/integrations', name: 'admin-integrations', component: () => import('@/views/admin/Integrations.vue'),meta: { title: 'SAP & Notifications', section: 'Administration', roles: ['ADMIN', 'MDM_ANALYST'] } },
   { path: '/settings', name: 'settings', component: () => import('@/views/SettingsView.vue'), meta: { title: 'Settings' } },
   { path: '/:pathMatch(.*)*', name: 'notfound', component: () => import('@/views/NotFound.vue'), meta: { title: 'Not found' } },
 ]
