@@ -373,21 +373,21 @@ onBeforeUnmount(() => { if (timer) { clearTimeout(timer); save() } })
 
 <style scoped>
 .stepper { list-style: none; display: flex; gap: .35rem; padding: 0; margin: 0 0 1.2rem; flex-wrap: wrap; }
-.stepper li button { display: flex; align-items: center; gap: .45rem; border: 1px solid var(--border); background: var(--surface); color: var(--muted); border-radius: 999px; padding: .3rem .8rem .3rem .35rem; font-size: .8rem; font-weight: 600; }
+.stepper li button { display: flex; align-items: center; gap: .45rem; border: 1px solid var(--border); background: var(--surface); color: var(--muted); border-radius: 999px; padding: .35rem .9rem .35rem .4rem; box-shadow: 0 1px 2px rgba(16, 28, 53, .04); font-size: .8rem; font-weight: 600; }
 .stepper li .n { width: 22px; height: 22px; border-radius: 50%; background: var(--surface-2); display: inline-flex; align-items: center; justify-content: center; font-size: .72rem; }
-.stepper li.current button { border-color: var(--accent); color: var(--accent); }
-.stepper li.current .n { background: var(--accent); color: #fff; }
+.stepper li.current button { border-color: #c7d2fe; color: var(--accent); background: var(--accent-soft); }
+.stepper li.current .n { background: var(--accent-grad); color: #fff; }
 .stepper li.done button { color: var(--success); }
 .stepper li.done .n { background: var(--success-soft); color: var(--success); }
 .stepper button:disabled { opacity: .6; cursor: default; }
-.domain { display: flex; align-items: center; gap: 1rem; padding: 1.1rem 1.2rem; text-align: left; color: var(--text); transition: border-color .15s, box-shadow .15s; }
-.domain:hover, .domain.sel { border-color: var(--accent); box-shadow: var(--shadow-2); }
+.domain { display: flex; align-items: center; gap: 1rem; padding: 1.2rem 1.3rem; text-align: left; color: var(--text); transition: transform .2s, border-color .2s, box-shadow .2s; }
+.domain:hover, .domain.sel { border-color: #c7d2fe; box-shadow: var(--shadow-2); transform: translateY(-3px); }
 .domain small { display: block; color: var(--muted); font-size: .82rem; margin-top: .15rem; }
-.dic { width: 46px; height: 46px; border-radius: 12px; background: var(--accent-soft); color: var(--accent); display: inline-flex; align-items: center; justify-content: center; flex: none; }
+.dic { width: 52px; height: 52px; border-radius: 16px; background: linear-gradient(140deg, #e0e7ff, #c7d2fe); color: var(--accent); display: inline-flex; align-items: center; justify-content: center; flex: none; }
 .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem 1.2rem; }
 @media (max-width: 700px) { .form-grid { grid-template-columns: 1fr; } }
 .req { color: var(--error); }
-.doc-row { display: flex; gap: .75rem; align-items: center; padding: .7rem .8rem; border: 1px solid var(--border); border-radius: 8px; margin-bottom: .5rem; }
+.doc-row { display: flex; gap: .75rem; align-items: center; padding: .75rem .9rem; border: 1px solid var(--border); border-radius: 14px; margin-bottom: .5rem; }
 .doc-row.missing { border-color: var(--warning-ink); background: var(--warning-soft); }
 .att { display: flex; align-items: center; gap: .5rem; font-size: .84rem; padding: .3rem 0; }
 .save-state { display: inline-flex; align-items: center; gap: .35rem; }

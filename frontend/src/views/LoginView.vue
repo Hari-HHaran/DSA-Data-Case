@@ -81,26 +81,32 @@ onMounted(async () => { if (!auth.ready) await auth.init(); if (!auth.personas.l
 </script>
 
 <style scoped>
-.login { min-height: 100vh; display: grid; grid-template-columns: 1.1fr 1fr; background: var(--bg); }
-.hero { background: var(--navy); color: #c9d3e6; padding: 3.5rem 3.5rem; display: flex; flex-direction: column; justify-content: center; gap: 1.2rem; }
-.hero h1 { color: #fff; font-size: 2.1rem; line-height: 1.2; margin: 0; }
+.login { min-height: 100vh; display: grid; grid-template-columns: 1.1fr 1fr; background: radial-gradient(700px 400px at 100% 0%, #ebe7ff 0%, transparent 70%), radial-gradient(600px 360px at 60% 100%, #e8f3ff 0%, transparent 70%), var(--bg); }
+.hero { position: relative; overflow: hidden; background: linear-gradient(150deg, #1e1b4b 0%, #312e81 45%, #4f46e5 100%); color: #d6dbf5; padding: 3.5rem 3.5rem; display: flex; flex-direction: column; justify-content: center; gap: 1.2rem; }
+.hero::before, .hero::after { content: ''; position: absolute; border-radius: 50%; pointer-events: none; }
+.hero::before { width: 420px; height: 420px; right: -140px; top: -160px; background: radial-gradient(circle, rgba(236, 72, 153, .45), transparent 65%); }
+.hero::after { width: 360px; height: 360px; left: -120px; bottom: -160px; background: radial-gradient(circle, rgba(45, 212, 191, .35), transparent 65%); }
+.hero > * { position: relative; z-index: 1; }
+.hero h1 { color: #fff; font-size: 2.3rem; line-height: 1.2; margin: 0; letter-spacing: -.02em; }
 .hero p { max-width: 520px; margin: 0; }
 .brand { display: flex; align-items: center; gap: .7rem; color: #fff; letter-spacing: .1em; }
-.logo { width: 38px; height: 38px; border-radius: 10px; background: linear-gradient(140deg, #2563eb, #0d9488); display: inline-flex; align-items: center; justify-content: center; }
+.logo { width: 40px; height: 40px; border-radius: 13px; background: linear-gradient(140deg, #818cf8, #4f46e5 60%, #0d9488); box-shadow: 0 10px 22px -10px rgba(99, 102, 241, 1); display: inline-flex; align-items: center; justify-content: center; }
 .logo span { width: 15px; height: 15px; border: 3px solid #fff; border-radius: 50%; }
 .pillars { list-style: none; padding: 0; margin: .5rem 0; display: flex; flex-direction: column; gap: .8rem; }
-.pillars li { display: flex; gap: .75rem; align-items: flex-start; }
+.pillars li { display: flex; gap: .75rem; align-items: flex-start; background: rgba(255, 255, 255, .08); border: 1px solid rgba(255, 255, 255, .12); border-radius: 16px; padding: .85rem 1rem; max-width: 520px; backdrop-filter: blur(6px); }
 .pillars svg { color: #2dd4bf; margin-top: 2px; flex: none; }
 .pillars strong { color: #fff; display: block; }
 .pillars span { font-size: .85rem; }
-.fine { font-size: .78rem; color: #8ea0c2; }
+.fine { font-size: .78rem; color: #b4bbe6; }
 .panel { display: flex; align-items: center; justify-content: center; padding: 2rem; }
-.panel > .card-x { width: 100%; max-width: 480px; }
-.personas { display: flex; flex-direction: column; gap: .45rem; max-height: 60vh; overflow: auto; }
-.persona { display: flex; align-items: center; gap: .75rem; padding: .6rem .7rem; border: 1px solid var(--border); border-radius: 10px; background: var(--surface); color: var(--text); }
-.persona:hover { border-color: var(--accent); background: #f8fbff; }
+.panel > .card-x { width: 100%; max-width: 500px; border-radius: 24px; box-shadow: 0 30px 60px -28px rgba(67, 56, 202, .45); }
+.personas { display: flex; flex-direction: column; gap: .55rem; max-height: 60vh; overflow: auto; padding: .25rem; margin: -.25rem; }
+.persona { display: flex; align-items: center; gap: .8rem; padding: .7rem .8rem; border: 1px solid var(--border); border-radius: 16px; background: var(--surface); color: var(--text); box-shadow: 0 1px 2px rgba(16, 28, 53, .04); transition: transform .15s, box-shadow .15s, border-color .15s; }
+.persona:hover { border-color: #c7d2fe; background: #fafaff; transform: translateY(-2px); box-shadow: var(--shadow-2); }
+.persona > svg { color: var(--muted); transition: transform .15s, color .15s; }
+.persona:hover > svg { color: var(--accent); transform: translateX(3px); }
 .persona small { display: block; color: var(--muted); font-size: .76rem; }
 .persona .story { color: var(--text-2); }
-.avatar { width: 36px; height: 36px; border-radius: 9px; background: var(--navy); color: #fff; font-weight: 700; font-size: .78rem; display: inline-flex; align-items: center; justify-content: center; flex: none; }
+.avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(140deg, #818cf8, #4f46e5); color: #fff; font-weight: 700; font-size: .78rem; display: inline-flex; align-items: center; justify-content: center; flex: none; }
 @media (max-width: 900px) { .login { grid-template-columns: 1fr; } .hero { padding: 2rem 1.25rem; } .hero h1 { font-size: 1.6rem; } }
 </style>

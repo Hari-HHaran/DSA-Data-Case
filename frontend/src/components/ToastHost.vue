@@ -18,7 +18,7 @@ const toast = useToast()
 
 <style scoped>
 .toasts { position: fixed; right: 1rem; bottom: 1rem; display: flex; flex-direction: column; gap: .5rem; z-index: 100; max-width: min(440px, calc(100vw - 2rem)); }
-.toast-x { display: flex; gap: .6rem; align-items: flex-start; background: var(--navy); color: #fff; padding: .7rem .85rem; border-radius: 10px; box-shadow: var(--shadow-2); font-size: .85rem; }
+.toast-x { display: flex; gap: .6rem; align-items: flex-start; background: var(--navy); color: #fff; padding: .8rem 1rem; border-radius: 14px; box-shadow: var(--shadow-2); font-size: .85rem; }
 .toast-x button { margin-left: auto; background: none; border: none; color: #9fb0cf; padding: 0; }
 .t-success svg:first-child { color: #4ade80; }
 .t-error { background: #7f1d1d; }

@@ -108,12 +108,12 @@ onMounted(async () => {
 .flow { display: flex; align-items: center; gap: .5rem; overflow-x: auto; padding-bottom: 1rem; }
 .arr { color: var(--muted); flex: none; }
 .stage { display: flex; flex-direction: column; gap: .4rem; }
-.node { border: 1px solid var(--border-strong); border-radius: 8px; padding: .5rem .7rem; background: var(--surface); min-width: 180px; font-size: .82rem; }
+.node { border: 1px solid var(--border); border-radius: 14px; padding: .6rem .8rem; box-shadow: var(--shadow-1); background: var(--surface); min-width: 180px; font-size: .82rem; }
 .node small { display: block; color: var(--muted); font-size: .72rem; }
-.node .c { color: #1d4ed8; }
+.node .c { color: #4338ca; }
 .node.cond { border-style: dashed; }
 .node.fixed { background: var(--surface-2); min-width: 120px; font-weight: 600; white-space: nowrap; }
-.node.sap { background: var(--navy); color: #fff; }
+.node.sap { background: linear-gradient(135deg, #6366f1, #4f46e5); color: #fff; border-color: transparent; }
 .step { padding: .85rem 1rem; box-shadow: none; }
 .step.off { opacity: .6; }
 </style>

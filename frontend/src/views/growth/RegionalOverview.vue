@@ -12,6 +12,7 @@
 
     <GrowthFilters v-if="months.length" :model="f" :countries="countries" :months="months" :customers="customers" @change="applyFilters" @reset="resetFilters" />
     <ErrorState v-if="error" :error="error" :retry="load" class="mb-3" />
+    <CountryMap v-if="countries.length" class="mb-3" :countries="countries" :stats="countryStats" :selected="f.countries" @change="(list) => applyFilters({ countries: list })" />
 
     <div class="grid grid-kpi mb-3">
       <KpiTile label="Confirmed purchase orders" :value="fmtNumber(k?.confirmed_pos.value)" unit="POs" :hint="`${fmtNumber(k?.avg_monthly_pos.value, 1)} per month`" :icon="ShoppingCart" :loading="loading" />
@@ -105,6 +106,7 @@ import KpiTile from '@/components/KpiTile.vue'
 import ChartCard from '@/components/ChartCard.vue'
 import EChart from '@/components/EChart.vue'
 import GrowthFilters from '@/components/GrowthFilters.vue'
+import CountryMap from '@/components/CountryMap.vue'
 import ErrorState from '@/components/ErrorState.vue'
 import EmptyState from '@/components/EmptyState.vue'
 import LoadingBlock from '@/components/LoadingBlock.vue'
@@ -123,6 +125,8 @@ const loading = ref(true)
 const error = ref(null)
 const customers = ref([])
 const opps = ref([])
+// Last known numbers per country for the map; countries outside the current filter keep their previous values.
+const countryStats = reactive({})
 const series = ref(null)
 const months = ref([])
 const countries = computed(() => ref_.countries)
@@ -154,6 +158,8 @@ async function load() {
       get('/api/forecasts', { country: fc.value.country, family: fc.value.family }).catch(() => null),
     ])
     o.value = ov
+    if (!f.countries.length) for (const k of Object.keys(countryStats)) delete countryStats[k]
+    for (const r of ov.ranking || []) countryStats[r.country] = r
     if (!months.value.length) { months.value = ov.window.months; if (!f.start) f.start = months.value[0]; if (!f.end) f.end = months.value.at(-1) }
     opps.value = op.items.filter((x) => !f.families.length || !x.family || f.families.includes(x.family)).slice(0, 5)
     series.value = fcr?.series || null
@@ -258,11 +264,11 @@ const implications = computed(() => {
 <style scoped>
 .fam { display: flex; gap: .75rem; align-items: center; padding: .8rem 1rem; }
 .alert-row { display: flex; gap: .6rem; padding: .7rem 1rem; border-bottom: 1px solid var(--border); color: var(--text); text-decoration: none; font-size: .84rem; align-items: flex-start; }
-.alert-row:hover { background: var(--surface-2); text-decoration: none; }
+.alert-row:hover { background: #f7f7ff; text-decoration: none; }
 .alert-row small { display: block; color: var(--muted); }
 .span-2 { grid-column: span 2; }
 @media (max-width: 1100px) { .span-2 { grid-column: auto; } }
-.pen { height: 4px; background: var(--surface-2); border-radius: 4px; margin-bottom: 2px; overflow: hidden; }
+.pen { height: 6px; background: var(--surface-2); border-radius: 4px; margin-bottom: 2px; overflow: hidden; }
 .pen span { display: block; height: 100%; border-radius: 4px; }
 .impl li { margin-bottom: .45rem; }
 .statement { font-size: .84rem; }

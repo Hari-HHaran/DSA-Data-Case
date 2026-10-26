@@ -81,9 +81,9 @@ onMounted(load)
 </script>
 <style scoped>
 .tasks { display: flex; flex-wrap: wrap; gap: .25rem; }
-.tk { display: inline-flex; align-items: center; gap: .2rem; border-radius: 6px; padding: .1rem .4rem; font-size: .72rem; font-weight: 600; background: #eef1f6; color: #475569; }
+.tk { display: inline-flex; align-items: center; gap: .2rem; border-radius: 999px; padding: .1rem .4rem; font-size: .72rem; font-weight: 600; background: #eef1f6; color: #475569; }
 .tk.approved { background: var(--success-soft); color: var(--success); }
 .tk.pending { background: var(--warning-soft); color: var(--warning); }
 .tk.rejected, .tk.changes_requested { background: var(--error-soft); color: #b91c1c; }
-tr.hl td { background: #f5f8ff; }
+tr.hl td { background: #f1f0ff; }
 </style>

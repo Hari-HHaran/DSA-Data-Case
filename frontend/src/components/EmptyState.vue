@@ -8,5 +8,5 @@
 </template>
 <script setup>
 import { Inbox } from 'lucide-vue-next'
-defineProps({ title: String, text: String, icon: Object })
+defineProps({ title: String, text: String, icon: [Object, Function] })
 </script>

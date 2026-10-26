@@ -183,10 +183,10 @@ onMounted(async () => {
 })
 </script>
 <style scoped>
-.opp { padding: .9rem 1rem; cursor: pointer; transition: border-color .15s, box-shadow .15s; }
-.opp:hover, .opp.focus { border-color: var(--border-strong); box-shadow: var(--shadow-2); }
+.opp { padding: 1rem 1.15rem; cursor: pointer; transition: transform .2s, border-color .2s, box-shadow .2s; }
+.opp:hover, .opp.focus { border-color: #c7d2fe; box-shadow: var(--shadow-2); transform: translateY(-3px); }
 .clamp { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
 .sec { padding: .7rem 0; border-bottom: 1px solid var(--border); }
 .sec:last-child { border-bottom: none; }
-.act { background: var(--surface-2); border-radius: 8px; padding: .7rem; }
+.act { background: var(--accent-soft); border-radius: 14px; padding: .7rem; }
 </style>

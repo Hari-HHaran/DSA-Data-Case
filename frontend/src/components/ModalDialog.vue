@@ -20,7 +20,7 @@ const dlg = ref(null)
 watch(() => props.open, async (v) => { if (v) { await nextTick(); dlg.value?.focus() } })
 </script>
 <style scoped>
-.backdrop { position: fixed; inset: 0; background: rgba(16, 28, 53, .45); display: flex; align-items: center; justify-content: center; z-index: 90; padding: 1rem; }
-.dialog { width: 100%; max-height: 90vh; overflow: auto; box-shadow: var(--shadow-2); outline: none; }
+.backdrop { position: fixed; inset: 0; background: rgba(16, 28, 53, .4); backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 90; padding: 1rem; }
+.dialog { width: 100%; max-height: 90vh; overflow: auto; box-shadow: 0 30px 60px -20px rgba(16, 28, 53, .45); outline: none; border-radius: 20px; }
 .foot { padding: .8rem 1.1rem; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: .5rem; }
 </style>

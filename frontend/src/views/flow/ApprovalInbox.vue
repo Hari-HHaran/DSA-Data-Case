@@ -44,6 +44,7 @@
 </template>
 <script setup>
 import { computed, onMounted, reactive, ref } from 'vue'
+import { useRoute } from 'vue-router'
 import { AlarmClock, Calendar, Check, CheckCircle2, Clock, Eye, Flag, Hourglass, Inbox, Layers, MapPin, MessageSquare, Siren, Tag, Undo2, User, X } from 'lucide-vue-next'
 import PageHeader from '@/components/PageHeader.vue'
 import StatusBadge from '@/components/StatusBadge.vue'
@@ -59,7 +60,8 @@ import { fmtDate, hoursLabel, ROLE_LABELS } from '@/utils/format'
 
 const auth = useAuth()
 const ref_ = useReference()
-const view = ref('pending')
+const route = useRoute()
+const view = ref(['pending', 'due_soon', 'overdue', 'clarification', 'completed'].includes(route.query.view) ? route.query.view : 'pending')
 const q = ref('')
 const items = ref([])
 const counts = ref({})
@@ -81,8 +83,9 @@ function open(task, mode) { dlg.task = task; dlg.mode = mode }
 onMounted(() => { ref_.load(); load() })
 </script>
 <style scoped>
-.task { display: flex; gap: 1rem; padding: .9rem 1rem; align-items: center; flex-wrap: wrap; }
-.task.focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(37, 99, 235, .12); }
+.task { display: flex; gap: 1rem; padding: 1rem 1.15rem; align-items: center; flex-wrap: wrap; transition: transform .2s, box-shadow .2s; }
+.task:hover { transform: translateY(-2px); box-shadow: var(--shadow-2); }
+.task.focus { border-color: var(--accent-2); box-shadow: var(--ring), var(--shadow-2); }
 .t-main { flex: 1; min-width: 300px; cursor: pointer; }
 .meta { display: flex; flex-wrap: wrap; gap: .35rem 1rem; color: var(--text-2); margin-top: .35rem; }
 .meta span { display: inline-flex; align-items: center; gap: .3rem; }

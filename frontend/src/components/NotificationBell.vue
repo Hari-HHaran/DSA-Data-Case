@@ -53,13 +53,13 @@ onBeforeUnmount(() => document.removeEventListener('click', onDoc))
 <style scoped>
 .bell-wrap { position: relative; }
 .bell { position: relative; padding: .4rem .5rem; }
-.dot { position: absolute; top: 1px; right: 0; background: var(--error); color: #fff; border-radius: 999px; font-size: .62rem; font-weight: 700; padding: 0 .3rem; min-width: 16px; line-height: 16px; }
+.dot { position: absolute; top: 1px; right: 0; background: #ec4899; color: #fff; border-radius: 999px; font-size: .62rem; font-weight: 700; padding: 0 .3rem; min-width: 16px; line-height: 16px; }
 .panel { position: absolute; right: 0; top: calc(100% + 6px); width: 380px; max-width: 92vw; box-shadow: var(--shadow-2); z-index: 50; }
 .head { display: flex; justify-content: space-between; align-items: center; padding: .7rem .9rem; border-bottom: 1px solid var(--border); }
 .list { list-style: none; margin: 0; padding: .25rem; max-height: 420px; overflow: auto; }
-.list li button { width: 100%; display: flex; gap: .65rem; text-align: left; border: none; background: none; padding: .55rem; border-radius: 8px; }
+.list li button { width: 100%; display: flex; gap: .65rem; text-align: left; border: none; background: none; padding: .6rem; border-radius: 12px; }
 .list li button:hover { background: var(--surface-2); }
-.list li.unread button { background: #f5f8ff; }
+.list li.unread button { background: #f5f5ff; }
 .ic { width: 28px; height: 28px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; flex: none; }
 .txt { display: flex; flex-direction: column; min-width: 0; font-size: .82rem; }
 .txt small { color: var(--text-2); font-size: .76rem; }

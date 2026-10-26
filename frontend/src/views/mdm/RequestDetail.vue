@@ -207,11 +207,11 @@ onMounted(() => { ref_.load(); load() })
 </script>
 
 <style scoped>
-.action-bar { display: flex; gap: .75rem; align-items: center; padding: .85rem 1rem; flex-wrap: wrap; border-left: 4px solid var(--accent); }
+.action-bar { display: flex; gap: .75rem; align-items: center; padding: 1rem 1.15rem; flex-wrap: wrap; border-left: 5px solid var(--accent-2); background: linear-gradient(90deg, #f5f5ff, var(--surface) 40%); }
 .action-bar.failed { border-left-color: var(--error); }
-.doc { display: flex; align-items: center; gap: .5rem; width: 100%; border: 1px solid var(--border); background: var(--surface); border-radius: 8px; padding: .5rem .6rem; margin-bottom: .4rem; font-size: .84rem; text-align: left; }
+.doc { display: flex; align-items: center; gap: .5rem; width: 100%; border: 1px solid var(--border); background: var(--surface); border-radius: 12px; padding: .5rem .6rem; margin-bottom: .4rem; font-size: .84rem; text-align: left; }
 .doc:hover { background: var(--surface-2); }
 .doc small { margin-left: auto; color: var(--muted); white-space: nowrap; }
-.payload { background: var(--surface-2); border-radius: 6px; padding: .5rem; max-height: 220px; overflow: auto; font-size: .72rem; white-space: pre-wrap; }
+.payload { background: var(--surface-2); border-radius: 10px; padding: .5rem; max-height: 220px; overflow: auto; font-size: .72rem; white-space: pre-wrap; }
 .min-w-0 { min-width: 0; }
 </style>

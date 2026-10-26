@@ -131,15 +131,15 @@ onMounted(load)
 </script>
 <style scoped>
 .flow-strip { display: flex; align-items: stretch; gap: .5rem; flex-wrap: wrap; }
-.step { flex: 1; min-width: 150px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: .8rem 1rem; display: flex; flex-direction: column; gap: .15rem; box-shadow: var(--shadow-1); }
+.step { flex: 1; min-width: 150px; background: var(--surface); border: 1px solid rgba(232, 235, 243, .8); border-radius: var(--radius); padding: .9rem 1.1rem; display: flex; flex-direction: column; gap: .15rem; box-shadow: var(--shadow-1); }
 .step strong { font-size: 1.35rem; }
 .step small { color: var(--muted); font-size: .76rem; }
 .step.warn svg { color: var(--warning-ink); } .step.ok svg { color: var(--success); } .step.teal svg { color: var(--teal); } .step.neutral svg { color: var(--muted); }
 .arrow { align-self: center; color: var(--muted); flex: none; }
 @media (max-width: 900px) { .arrow { display: none; } }
 tr.mdm td { background: #f6f9ff; }
-.stat { background: var(--surface-2); border-radius: 8px; padding: .7rem .8rem; }
+.stat { background: var(--accent-soft); border-radius: 14px; padding: .7rem .8rem; }
 .stat .big { font-size: 1.45rem; font-weight: 700; }
 .stat small { color: var(--text-2); font-size: .76rem; }
-.cons { border: 1px solid var(--border); border-radius: 8px; padding: .7rem .8rem; }
+.cons { border: 1px solid var(--border); border-radius: 14px; padding: .7rem .8rem; }
 </style>

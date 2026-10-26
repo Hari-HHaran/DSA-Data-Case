@@ -41,7 +41,7 @@ function toggle(key, v) {
 function set(key, v) { emit('change', { ...props.model, [key]: v }) }
 </script>
 <style scoped>
-.filters { display: flex; flex-wrap: wrap; gap: .8rem 1.4rem; padding: .85rem 1rem; align-items: flex-start; }
+.filters { display: flex; flex-wrap: wrap; gap: .8rem 1.4rem; padding: 1rem 1.2rem; align-items: flex-start; }
 .fgroup { display: flex; flex-direction: column; gap: .3rem; }
 .fgroup select { min-width: 140px; }
 </style>

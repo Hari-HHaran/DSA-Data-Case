@@ -184,7 +184,7 @@ onMounted(() => { ref_.load(); load(); loadGrid() })
 .champ td { background: #f3fbf6; }
 tr.total td { background: var(--surface-2); }
 td.best { font-weight: 700; color: var(--success); }
-tr.hl td { background: #f5f8ff; }
+tr.hl td { background: #f1f0ff; }
 .spin { animation: spin 1s linear infinite; }
 @keyframes spin { to { transform: rotate(360deg); } }
 </style>

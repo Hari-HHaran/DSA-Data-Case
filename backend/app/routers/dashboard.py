@@ -47,37 +47,60 @@ def operational(db: Session) -> dict:
 
 @router.get("/dashboard")
 def dashboard(db: Session = Depends(get_db), user: User = Depends(get_current_user)):
-    out = {"user_roles": user.role_codes, "operational": operational(db), "synthetic": True}
+    """Personal home page data. Each block is only sent to the people it concerns."""
+    oversight = user.has_role(*roles.REQUEST_OVERSIGHT_ROLES)  # MDM analyst, admin, executive
+    out = {"user_roles": user.role_codes, "synthetic": True}
+    # Process-wide numbers are for the people who run or oversee the process, not for every user.
+    if oversight:
+        out["operational"] = operational(db)
     if user.has_role(*roles.ANALYTICS_ROLES):
         ov = analytics.overview(db, {})
         run = forecasting.latest(db)
         out["regional"] = {"kpis": ov["kpis"], "ranking": ov["ranking"], "matrix": ov["matrix"], "window": ov["window"],
                            "trend": ov["trend"], "countries": ov["countries"], "forecast": forecasting.summary(db, run) if run else None}
+    # Opportunities only for the roles that can open the opportunities workspace.
+    if user.has_role(roles.SALES, roles.EXECUTIVE, roles.ADMIN, roles.MDM_ANALYST):
+        live = (CommercialOpportunity.is_stale.is_(False),)
+        scope = "all"
+        if not oversight:  # a salesperson sees what they own or what sits in their own country
+            scope = "mine"
+            live += ((CommercialOpportunity.owner_id == user.id) | (CommercialOpportunity.country_code == user.country_code),)
         out["opportunities"] = {
-            "open": db.execute(select(func.count(CommercialOpportunity.id)).where(CommercialOpportunity.status.in_(["NEW", "UNDER_REVIEW", "ASSIGNED", "IN_PROGRESS"]),
-                                                                                 CommercialOpportunity.is_stale.is_(False))).scalar(),
+            "scope": scope,
+            "open": db.execute(select(func.count(CommercialOpportunity.id)).where(CommercialOpportunity.status.in_(["NEW", "UNDER_REVIEW", "ASSIGNED", "IN_PROGRESS"]), *live)).scalar(),
             "high": db.execute(select(func.count(CommercialOpportunity.id)).where(CommercialOpportunity.priority_label == "HIGH",
-                                                                                 CommercialOpportunity.status == "NEW", CommercialOpportunity.is_stale.is_(False))).scalar(),
-            "top": [{"id": o.id, "title": o.title, "category": o.category, "priority": o.priority_label, "insight": o.insight}
-                    for o in db.execute(select(CommercialOpportunity).where(CommercialOpportunity.status == "NEW", CommercialOpportunity.is_stale.is_(False))
-                                        .order_by(CommercialOpportunity.priority_score.desc()).limit(4)).scalars()],
+                                                                                 CommercialOpportunity.status == "NEW", *live)).scalar(),
+            "top": [{"id": o.id, "title": o.title, "category": o.category, "priority": o.priority_label, "insight": o.insight, "country_code": o.country_code}
+                    for o in db.execute(select(CommercialOpportunity).where(CommercialOpportunity.status == "NEW", *live)
+                                        .order_by(CommercialOpportunity.priority_score.desc()).limit(6)).scalars()],
             "followups_open": db.execute(select(func.count(SalesFollowup.id)).where(SalesFollowup.status != "DONE")).scalar(),
         }
     mine = db.execute(select(MdmRequest).where(MdmRequest.requester_id == user.id).order_by(MdmRequest.updated_at.desc()).limit(6)).scalars().all()
     out["my_requests"] = [request_summary(r) for r in mine]
+    out["my_request_counts"] = dict(db.execute(select(MdmRequest.status, func.count()).where(MdmRequest.requester_id == user.id)
+                                               .group_by(MdmRequest.status)).all())
     approver_roles = [r for r in user.role_codes if r in roles.APPROVER_ROLES]
     if approver_roles:
         tasks = db.execute(select(ApprovalTask).where(ApprovalTask.role_code.in_(approver_roles), ApprovalTask.status == "PENDING")
                            .order_by(ApprovalTask.due_at)).scalars().all()
+        now = utcnow()
+        states = [workflow.task_sla_state(t, now) for t in tasks]
         out["my_tasks"] = [{**task_out(t), "request": request_summary(t.request)} for t in tasks[:8]]
+        out["my_task_counts"] = {"pending": len(tasks), "overdue": states.count("OVERDUE"), "due_soon": states.count("DUE_SOON"),
+                                 "on_track": states.count("ON_TRACK"),
+                                 "decided": db.execute(select(func.count(ApprovalTask.id)).where(ApprovalTask.decided_by_id == user.id)).scalar()}
     if user.has_role(roles.MDM_ANALYST):
         q = db.execute(select(MdmRequest).where(MdmRequest.status.in_(["MDM_VERIFICATION", "SAP_PENDING", "SAP_FAILED"]))
                        .order_by(MdmRequest.updated_at)).scalars().all()
         out["mdm_queue"] = [request_summary(r) for r in q]
-    events = db.execute(select(WorkflowEvent).where(WorkflowEvent.event_type.in_([
+    feed = select(WorkflowEvent).where(WorkflowEvent.event_type.in_([
         "STATUS_SUBMITTED", "TASK_APPROVED", "TASK_REJECTED", "TASK_CHANGES_REQUESTED", "SAP_CREATION_COMPLETED", "SAP_CREATION_FAILED",
-        "DUPLICATE_PREVENTED", "FOLLOWUP_ASSIGNED", "MAPPING_CONFIRMED", "ESCALATED"])).order_by(WorkflowEvent.created_at.desc(), WorkflowEvent.id.desc()).limit(10)).scalars().all()
-    out["activity"] = [event_out(e) for e in events]
+        "DUPLICATE_PREVENTED", "FOLLOWUP_ASSIGNED", "MAPPING_CONFIRMED", "ESCALATED"]))
+    if not oversight:  # everyone else only sees updates on requests they raised or acted on
+        own = select(MdmRequest.id).where(MdmRequest.requester_id == user.id)
+        feed = feed.where((WorkflowEvent.request_id.in_(own)) | (WorkflowEvent.actor_id == user.id))
+    out["activity_scope"] = "all" if oversight else "mine"
+    out["activity"] = [event_out(e) for e in db.execute(feed.order_by(WorkflowEvent.created_at.desc(), WorkflowEvent.id.desc()).limit(10)).scalars()]
     return out
 
 

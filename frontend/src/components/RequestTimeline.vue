@@ -46,7 +46,7 @@ const stageGroups = computed(() => {
 .tl li.done::before { background: var(--success); }
 .dot { position: relative; z-index: 1; width: 22px; height: 22px; border-radius: 50%; background: var(--surface); border: 2px solid var(--border-strong); display: flex; align-items: center; justify-content: center; margin: 0 auto; color: #fff; }
 .done .dot { background: var(--success); border-color: var(--success); }
-.current .dot { border-color: var(--accent); box-shadow: 0 0 0 4px rgba(37, 99, 235, .15); background: var(--accent); }
+.current .dot { border-color: var(--accent); box-shadow: 0 0 0 5px rgba(99, 102, 241, .18); background: var(--accent); }
 .exception .dot { background: var(--error); border-color: var(--error); }
 .lbl { text-align: center; margin-top: .4rem; font-size: .74rem; line-height: 1.25; padding: 0 .2rem; }
 .lbl strong { display: block; font-weight: 600; color: var(--text-2); }
@@ -56,7 +56,7 @@ const stageGroups = computed(() => {
 .stage-row { display: flex; gap: .8rem; align-items: stretch; margin-bottom: .55rem; }
 .stage-n { width: 64px; flex: none; font-size: .75rem; font-weight: 700; color: var(--text-2); padding-top: .5rem; }
 .stage-n small { display: block; font-weight: 500; color: var(--muted); }
-.task { border: 1px solid var(--border); border-radius: 8px; padding: .55rem .7rem; min-width: 230px; flex: 1; font-size: .83rem; display: flex; flex-direction: column; gap: .2rem; }
+.task { border: 1px solid var(--border); border-radius: 12px; padding: .55rem .7rem; min-width: 230px; flex: 1; font-size: .83rem; display: flex; flex-direction: column; gap: .2rem; }
 .task small { color: var(--muted); font-size: .75rem; }
 .task.approved { border-color: #b7e2c6; background: #f6fcf8; }
 .task.pending { border-color: #f3d6a4; background: #fffbf3; }

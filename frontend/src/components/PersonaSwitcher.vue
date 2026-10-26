@@ -67,17 +67,17 @@ onBeforeUnmount(() => document.removeEventListener('click', onDoc))
 
 <style scoped>
 .persona { position: relative; }
-.who { display: flex; align-items: center; gap: .55rem; background: transparent; border: 1px solid var(--border); border-radius: 10px; padding: .25rem .55rem .25rem .3rem; color: var(--text); }
+.who { display: flex; align-items: center; gap: .55rem; background: var(--surface); border: 1px solid var(--border); border-radius: 999px; padding: .25rem .55rem .25rem .3rem; color: var(--text); }
 .who:hover { background: var(--surface-2); }
 .who-text { flex-direction: column; line-height: 1.1; text-align: left; }
 .who-text strong { font-size: .84rem; }
 .who-text small { font-size: .72rem; color: var(--muted); max-width: 170px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.avatar { width: 30px; height: 30px; border-radius: 8px; background: var(--navy); color: #fff; font-size: .72rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; flex: none; }
+.avatar { width: 30px; height: 30px; border-radius: 50%; background: linear-gradient(140deg, #818cf8, #4f46e5); color: #fff; font-size: .72rem; font-weight: 700; display: inline-flex; align-items: center; justify-content: center; flex: none; }
 .avatar.sm { width: 28px; height: 28px; }
 .menu { position: absolute; right: 0; top: calc(100% + 6px); width: 330px; max-height: 80vh; overflow: auto; box-shadow: var(--shadow-2); padding: .4rem; z-index: 50; }
 .menu-head { padding: .6rem .65rem .7rem; border-bottom: 1px solid var(--border); margin-bottom: .3rem; font-size: .86rem; }
 .menu-sub { display: flex; justify-content: space-between; align-items: center; padding: .45rem .65rem .2rem; }
-.menu-item { width: 100%; display: flex; align-items: center; gap: .6rem; padding: .45rem .6rem; border: none; background: none; border-radius: 8px; font-size: .84rem; color: var(--text); }
+.menu-item { width: 100%; display: flex; align-items: center; gap: .6rem; padding: .5rem .6rem; border: none; background: none; border-radius: 10px; font-size: .84rem; color: var(--text); }
 .menu-item small { display: block; color: var(--muted); font-size: .72rem; }
 .menu-item:hover { background: var(--surface-2); }
 .menu-item.current { background: var(--accent-soft); }

@@ -156,5 +156,5 @@ onMounted(async () => {
 .plan { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: .6rem; }
 .plan li { display: flex; gap: .65rem; font-size: .86rem; }
 .plan small { display: block; color: var(--muted); }
-.plan .n { width: 24px; height: 24px; border-radius: 50%; background: var(--teal-soft); color: var(--teal); font-weight: 700; font-size: .75rem; display: inline-flex; align-items: center; justify-content: center; flex: none; }
+.plan .n { width: 26px; height: 26px; border-radius: 50%; background: linear-gradient(140deg, #ccfbf1, #99f6e4); color: #0f766e; font-weight: 700; font-size: .75rem; display: inline-flex; align-items: center; justify-content: center; flex: none; }
 </style>
