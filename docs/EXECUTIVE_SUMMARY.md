@@ -1,7 +1,7 @@
 # LIVES ONE — Executive summary
 
 **One Record. One Workflow. One Regional Intelligence Layer.**
-Demo video: *[YouTube link — add after recording]* · Code: *[GitHub link — add after pushing]* · All data synthetic; SAP B1 and Teams/Outlook mocked.
+Demo video: [YouTube](https://youtu.be/PHJCP39D76E?si=pRjQJW95-cHSR_l5) · Code: [GitHub](https://github.com/Hari-HHaran/DSA-Data-Case) · All data synthetic; SAP B1 and Teams/Outlook mocked.
 
 ## 1. The problem
 
