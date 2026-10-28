@@ -1,5 +1,12 @@
 # Demo walkthrough & video script (2:45)
 
+## Links
+
+| | |
+|---|---|
+| ▶️ **Demo video (YouTube)** | https://youtu.be/PHJCP39D76E?si=pRjQJW95-cHSR_l5 |
+| 💻 **GitHub repository** | https://github.com/Hari-HHaran/DSA-Data-Case |
+
 **Before recording:** `cd backend && python -m app.seed`, start API and frontend, browser at 1440×900, zoom 90%.
 Have `docs/demo-assets/sample-product-licence.pdf` ready (a synthetic placeholder document).
 The same story is automated in `frontend/e2e/demo.spec.js` — run it once to confirm the environment, then reseed.
